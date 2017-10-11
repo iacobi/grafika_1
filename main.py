@@ -23,12 +23,17 @@ class Graf_1:
         self.total_ring_width = self.ring_width + self.ring_blur
         self.blur_step = int(255 / self.ring_blur)
 
+        self.arg_x = 20
+        self.arg_y = 40
+
         self.primary_color = WHITE
         self.secondary_color = BLACK
 
         self.pattern_dictionary = {'dots': self.dots,
                                    'shards': self.shards,
-                                   'blurred_rings': self.blurred_rings}
+                                   'blurred_rings': self.blurred_rings,
+                                   'chessboard': self.chessboard,
+                                   'chessboard_45': self.chessboard_45}
 
     def draw_pattern(self, pattern_name):
         im = Image.new("RGB", (self.width, self.height), "white")
@@ -62,20 +67,6 @@ class Graf_1:
         else:
             return self.secondary_color
 
-    def blurred_rings_old(self, x, y):
-        dist = self.distance_from_center(x, y)
-
-        r = int(dist / self.blurr)
-        barwa = dist - r * self.blurr
-        barwa = barwa / self.blurr * 255
-
-        if r % 2 == 0:
-            barwa = 255 - int(barwa)
-        else:
-            barwa = int(barwa)
-
-        return (barwa, barwa, barwa)
-
     def blurred_rings(self, x, y):
         dist = self.distance_from_center(x, y)
 
@@ -99,9 +90,30 @@ class Graf_1:
 
         return (color_value, color_value, color_value)
 
+    def chessboard(self, x, y):
+        x_d = int((x + self.width) / self.arg_x)
+        y_d = int((y + self.height) / self.arg_y)
+        if x_d % 2 == y_d % 2:
+            return self.primary_color
+        else:
+            return self.secondary_color
+
+    def chessboard_45(self, x, y):
+        return self.chessboard(x * 0.525 - y * 0.525, x * 0.525 + y * 0.525)
+#        x_angle = x * 0.525 - y * 0.525
+#        y_angle = x * 0.525 + y * 0.525
+#        x_d = int((x_angle + self.width) / self.arg_x)
+#        y_d = int((y_angle + self.height) / self.arg_y)
+#        if x_d % 2 == y_d % 2:
+#            return self.primary_color
+#        else:
+#            return self.secondary_color
+
     def main(self):
-        self.draw_pattern('shards')
-        self.draw_pattern('blurred_rings')
+        # self.draw_pattern('shards')
+        # self.draw_pattern('blurred_rings')
+        self.draw_pattern('chessboard')
+        self.draw_pattern('chessboard_45')
 
 
 graf = Graf_1(500, 500)
