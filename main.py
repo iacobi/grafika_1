@@ -165,6 +165,14 @@ class PatternGenerator:
         else:
             return self.secondary_color
 
+    def paste_pattern(self, image, pattern_name):
+        pattern_image = sefl.generate_pattern_image(pattern_name)
+
+    def present_patterns(self, image):
+        for pattern_name in self.pattern_dictionary.keys()
+            modified_image = self.paste_pattern(image, pattern_name)
+            # save modified image
+
     def main(self):
         # self.generate_pattern_image('shards').show()
         # self.generate_pattern_image('blurred_rings').show()
@@ -177,10 +185,12 @@ class PatternGenerator:
         print('LOGGER: CORRECT')
 
 
-def paste_pattern(base_image, pattern_name):
+# def paste_pattern(base_image, pattern_name):
     # get width/height from base image
-    print('paster')
+    # print('paster')
     # PatternGenerator
+
+    for
 
 p_generator = PatternGenerator(500, 500)
 p_generator.main()
