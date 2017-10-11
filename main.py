@@ -26,8 +26,8 @@ class PatternGenerator:
 
         self.step = 20
 
-        self.primary_color = GREEN
-        self.secondary_color = BLACK
+        self.primary_color = BLACK
+        self.secondary_color = WHITE
 
         self.pattern_dictionary = {'dots': self.dots,
                                    'shards': self.shards,
@@ -37,6 +37,10 @@ class PatternGenerator:
                                    'chessboard_45': self.chessboard_45,
                                    'ring_grid': self.ring_grid,
                                    'concentric': self.concentric}
+
+    def set_colors(self, primary=BLACK, secondary=WHITE):
+        self.primary_color = primary
+        self.secondary = secondary
 
     def generate_pattern_image(self, pattern_name):
         im = Image.new("RGB", (self.width, self.height), "white")
@@ -172,6 +176,11 @@ class PatternGenerator:
         # self.generate_pattern_image('concentric').show()
         print('LOGGER: CORRECT')
 
+
+def paste_pattern(base_image, pattern_name):
+    # get width/height from base image
+    print('paster')
+    # PatternGenerator
 
 p_generator = PatternGenerator(500, 500)
 p_generator.main()
