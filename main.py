@@ -13,62 +13,43 @@ class Graf_1:
     def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.pattern_x_center = 100
-        self.pattern_y_center = 200
-
-        self.shards_step = 20
+        self.pattern_x_center = 200
+        self.pattern_y_center = 300
 
         self.ring_width = 10
         self.ring_blur = 30
         self.total_ring_width = self.ring_width + self.ring_blur
         self.blur_step = int(255 / self.ring_blur)
 
-        self.arg_x = 20
-        self.arg_y = 40
+        self.arg_x = 70
+        self.arg_y = 90
 
-        self.primary_color = WHITE
+        self.step = 20
+
+        self.primary_color = GREEN
         self.secondary_color = BLACK
 
         self.pattern_dictionary = {'dots': self.dots,
                                    'shards': self.shards,
                                    'blurred_rings': self.blurred_rings,
+                                   'grid': self.grid,
                                    'chessboard': self.chessboard,
                                    'chessboard_45': self.chessboard_45}
 
-    def draw_pattern(self, pattern_name):
+    def generate_pattern_image(self, pattern_name):
         im = Image.new("RGB", (self.width, self.height), "white")
         pix = im.load()
         for i in range(0, self.width):
             for j in range(0, self.height):
                 pix[i, j] = self.pattern_dictionary[pattern_name](x=i, y=j)
-        im.show()
+        return im
 
-    def distance_from_center(self, x, y):
-        return math.sqrt((x - self.pattern_x_center) * (x - self.pattern_x_center) +
-                         (y - self.pattern_y_center) * (y - self.pattern_y_center))
-
-    def dots(self, x, y):
-        if x < 20 or y < 20:
-            return self.primary_color
-        else:
-            return self.secondary_color
-
-    def shards(self, x, y):
-        theta = math.atan2(self.pattern_y_center - y,
-                           self.pattern_x_center - x)
-        # theta += math.pi/2
-        angle = int(math.degrees(theta))
-
-        if (angle < 360):
-            angle = angle + 360
-
-        if (angle / self.shards_step) % 2 == 0:
-            return self.primary_color
-        else:
-            return self.secondary_color
+    def distance_from(self, x, y, x_c, y_c):
+        return math.sqrt((x - x_c) * (x - x_c) + (y - y_c) * (y - y_c))
 
     def blurred_rings(self, x, y):
-        dist = self.distance_from_center(x, y)
+        dist = self.distance_from(
+            x=x, y=y, x_c=self.pattern_x_center, y_c=self.pattern_y_center)
 
         ring_index = int(dist / self.total_ring_width)
         ring_mod = int(dist % self.total_ring_width)
@@ -90,7 +71,36 @@ class Graf_1:
 
         return (color_value, color_value, color_value)
 
+    def grid(self, x, y):
+        "step: border width , arg_x: x distance between fields, arg_y: y distance between fields"
+        box_x = self.arg_x - self.step
+        box_y = self.arg_y - self.step
+        # przesuwamy srodek na krawedz pola kratki
+        x_c = self.width / 2 - self.arg_x / 2
+        y_c = self.height / 2 - self.arg_y / 2
+
+        d = x_c - x
+        if d > 0:
+            if d % self.arg_x >= box_x:
+                return self.secondary_color
+        else:
+            d = -1 * d
+            if d % self.arg_x < self.step:
+                return self.secondary_color
+
+        d = y_c - y
+        if d > 0:
+            if d % self.arg_y >= box_y:
+                return self.secondary_color
+        else:
+            d = -1 * d
+            if d % self.arg_y < self.step:
+                return self.secondary_color
+
+        return self.primary_color
+
     def chessboard(self, x, y):
+        "arg_x: field width, arg_y: field_height"
         x_d = int((x + self.width) / self.arg_x)
         y_d = int((y + self.height) / self.arg_y)
         if x_d % 2 == y_d % 2:
@@ -100,20 +110,39 @@ class Graf_1:
 
     def chessboard_45(self, x, y):
         return self.chessboard(x * 0.525 - y * 0.525, x * 0.525 + y * 0.525)
-#        x_angle = x * 0.525 - y * 0.525
-#        y_angle = x * 0.525 + y * 0.525
-#        x_d = int((x_angle + self.width) / self.arg_x)
-#        y_d = int((y_angle + self.height) / self.arg_y)
-#        if x_d % 2 == y_d % 2:
-#            return self.primary_color
-#        else:
-#            return self.secondary_color
+
+    def dots(self, x, y):
+        # uses arg_x twice
+        x_d = int(abs((x - self.pattern_x_center) % self.arg_x * 2))
+        y_d = int(abs((y - self.pattern_x_center) % self.arg_x * 2))
+        dist = self.distance_from(x_d, y_d, self.arg_x, self.arg_y)
+        if (dist < self.arg_x - self.step):
+            return self.primary_color
+        else:
+            return self.secondary_color
+
+    def shards(self, x, y):
+        theta = math.atan2(self.pattern_y_center - y,
+                           self.pattern_x_center - x)
+        # theta += math.pi/2
+        angle = int(math.degrees(theta))
+
+        if (angle < 360):
+            angle = angle + 360
+
+        if (angle / self.step) % 2 == 0:
+            return self.primary_color
+        else:
+            return self.secondary_color
 
     def main(self):
-        # self.draw_pattern('shards')
-        # self.draw_pattern('blurred_rings')
-        self.draw_pattern('chessboard')
-        self.draw_pattern('chessboard_45')
+        # self.generate_pattern_image('shards').show()
+        # self.generate_pattern_image('blurred_rings').show()
+        # self.generate_pattern_image('chessboard').show()
+        # self.generate_pattern_image('chessboard_45').show()
+        # self.generate_pattern_image('grid').show()
+        self.generate_pattern_image('dots').show()
+        print('LOGGER: CORRECT')
 
 
 graf = Graf_1(500, 500)
