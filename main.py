@@ -8,20 +8,20 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
 
-class Graf_1:
+class PatternGenerator:
 
     def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.pattern_x_center = 200
-        self.pattern_y_center = 300
+        self.pattern_x_center = 250
+        self.pattern_y_center = 250
 
         self.ring_width = 10
         self.ring_blur = 30
         self.total_ring_width = self.ring_width + self.ring_blur
         self.blur_step = int(255 / self.ring_blur)
 
-        self.arg_x = 70
+        self.arg_x = 90
         self.arg_y = 90
 
         self.step = 20
@@ -34,7 +34,9 @@ class Graf_1:
                                    'blurred_rings': self.blurred_rings,
                                    'grid': self.grid,
                                    'chessboard': self.chessboard,
-                                   'chessboard_45': self.chessboard_45}
+                                   'chessboard_45': self.chessboard_45,
+                                   'ring_grid': self.ring_grid,
+                                   'concentric': self.concentric}
 
     def generate_pattern_image(self, pattern_name):
         im = Image.new("RGB", (self.width, self.height), "white")
@@ -121,6 +123,16 @@ class Graf_1:
         else:
             return self.secondary_color
 
+    def ring_grid(self, x, y):
+        # uses arg_x twice
+        x_d = int(abs((x - self.pattern_x_center) % self.arg_x * 2))
+        y_d = int(abs((y - self.pattern_x_center) % self.arg_x * 2))
+        dist = self.distance_from(x_d, y_d, self.arg_x, self.arg_y)
+        if (int(dist) / int(self.arg_x / 5)) % 2 == 0:
+            return self.primary_color
+        else:
+            return self.secondary_color
+
     def shards(self, x, y):
         theta = math.atan2(self.pattern_y_center - y,
                            self.pattern_x_center - x)
@@ -135,15 +147,32 @@ class Graf_1:
         else:
             return self.secondary_color
 
+    def concentric(self, x, y):
+        # FIX THIS PROMPTLY !!!!
+        dist = self.distance_from(
+            x=x, y=y, x_c=self.pattern_x_center, y_c=self.pattern_y_center)
+        w = int(0.05 * dist) + 1
+        if dist == 0:
+            w = 1
+        r = int(dist) / w
+
+        if r % 2 == 0:
+            return self.primary_color
+        else:
+            return self.secondary_color
+
     def main(self):
         # self.generate_pattern_image('shards').show()
         # self.generate_pattern_image('blurred_rings').show()
         # self.generate_pattern_image('chessboard').show()
         # self.generate_pattern_image('chessboard_45').show()
         # self.generate_pattern_image('grid').show()
-        self.generate_pattern_image('dots').show()
+        # self.generate_pattern_image('dots').show()
+        # self.generate_pattern_image('ring_grid').show()
+        # self.generate_pattern_image('concentric').show()
         print('LOGGER: CORRECT')
 
 
-graf = Graf_1(500, 500)
-graf.main()
+p_generator = PatternGenerator(500, 500)
+p_generator.main()
+p_generator.generate_pattern_image('grid').show()
