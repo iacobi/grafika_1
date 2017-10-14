@@ -13,8 +13,8 @@ class PatternGenerator:
     def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.pattern_x_center = 250
-        self.pattern_y_center = 250
+        self.pattern_x_center = 200
+        self.pattern_y_center = 150
 
         self.ring_width = 10
         self.ring_blur = 30
@@ -152,15 +152,22 @@ class PatternGenerator:
             return self.secondary_color
 
     def concentric(self, x, y):
-        # FIX THIS PROMPTLY !!!!
         dist = self.distance_from(
             x=x, y=y, x_c=self.pattern_x_center, y_c=self.pattern_y_center)
-        w = int(0.05 * dist) + 1
-        if dist == 0:
-            w = 1
-        r = int(dist) / w
+        radius = 1
 
-        if r % 2 == 0:
+        r_index = int(dist) / radius
+
+        if self.check(0, 2, int(dist)):
             return self.primary_color
         else:
             return self.secondary_color
+
+    def check(self, start, length, index):
+        if index >= (length + start):
+            return self.check(start + length, length + 2, index)
+        else:
+            if index >= (length / 2 + start):
+                return True
+            else:
+                return False
