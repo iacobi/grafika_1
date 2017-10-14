@@ -1,41 +1,38 @@
 from PatternGenerator import PatternGenerator
+from PIL import Image
 
 
-# def paste_pattern(self, image, pattern_name):
-#     pattern_image = sefl.generate_pattern_image(pattern_name)
+# def merge_images(image_1, image_2, pattern_name="shards"):
+def merge_images(pattern_name="shards"):
+    width = height = 500
+
+    # reading images
+    image_1 = Image.new("RGB", (width, height), "red")
+    image_2 = Image.new("RGB", (width, height), "green")
+    pattern_image = PatternGenerator(width, height).generate_pattern_image(pattern_name).load()
+    final_image = Image.new("RGB", (width, height), "white")
+    final_image_pix = final_image.load()
+    im_1 = image_1.load()
+    im_2 = image_2.load()
+    for x in range(width):
+        for y in range(height):
+            final_image_pix[x, y] = merge_pixel(im_1[x, y], im_2[x, y], pattern_image[x, y])
+    final_image.show()
+
+
+def merge_pixel(image_1_tuple, image_2_tuple, pattern_tuple):
+    pattern = float(pattern_tuple[0]) / 255  # bierzemy tylko pod uwage czerwony bo zakladamy, ze pattern jest w skali szarosci
+    return tuple([int(pattern * image_1_tuple[i] + (1 - pattern) * image_2_tuple[i]) for i in range(3)])
+
+# p_generator = PatternGenerator(500, 500)
 #
-#
-# def present_patterns(self, image):
-#     for pattern_name in self.pattern_dictionary.keys():
-#         modified_image = self.paste_pattern(image, pattern_name)
-#         # save modified image
+# p_generator.generate_pattern_image('shards').show()
+# p_generator.generate_pattern_image('blurred_rings').show()
+# p_generator.generate_pattern_image('chessboard').show()
+# p_generator.generate_pattern_image('chessboard_45').show()
+# p_generator.generate_pattern_image('grid').show()
+# p_generator.generate_pattern_image('dots').show()
+# p_generator.generate_pattern_image('ring_grid').show()
+# p_generator.generate_pattern_image('concentric').show()
 
-
-def main(self):
-    # self.generate_pattern_image('shards').show()
-    # self.generate_pattern_image('blurred_rings').show()
-    # self.generate_pattern_image('chessboard').show()
-    # self.generate_pattern_image('chessboard_45').show()
-    # self.generate_pattern_image('grid').show()
-    # self.generate_pattern_image('dots').show()
-    # self.generate_pattern_image('ring_grid').show()
-    # self.generate_pattern_image('concentric').show()
-    print('LOGGER: CORRECT')
-
-
-# def paste_pattern(base_image, pattern_name):
-    # get width/height from base image
-    # print('paster')
-    # PatternGenerator
-
-
-p_generator = PatternGenerator(500, 500)
-
-p_generator.generate_pattern_image('shards').show()
-p_generator.generate_pattern_image('blurred_rings').show()
-p_generator.generate_pattern_image('chessboard').show()
-p_generator.generate_pattern_image('chessboard_45').show()
-p_generator.generate_pattern_image('grid').show()
-p_generator.generate_pattern_image('dots').show()
-p_generator.generate_pattern_image('ring_grid').show()
-p_generator.generate_pattern_image('concentric').show()
+merge_images(pattern_name="chessboard_45")
