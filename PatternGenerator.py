@@ -13,8 +13,8 @@ class PatternGenerator:
     def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.pattern_x_center = 200
-        self.pattern_y_center = 150
+        self.pattern_x_center = int(width / 2)
+        self.pattern_y_center = int(height / 2)
 
         self.ring_width = 10
         self.ring_blur = 30
@@ -38,9 +38,20 @@ class PatternGenerator:
                                    'ring_grid': self.ring_grid,
                                    'concentric': self.concentric}
 
+    def set_x_y_step(self, x, y, step):
+        self.arg_x = x
+        self.arg_y = y
+        self.step = step
+
     def set_colors(self, primary=BLACK, secondary=WHITE):
         self.primary_color = primary
         self.secondary = secondary
+
+    def set_ring_blur(self, width, blur):
+        self.ring_width = width
+        self.ring_blur = blur
+        self.total_ring_width = self.ring_width + self.ring_blur
+        self.blur_step = int(255 / self.ring_blur)
 
     def generate_pattern_image(self, pattern_name):
         im = Image.new("RGB", (self.width, self.height), "white")

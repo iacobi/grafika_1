@@ -43,11 +43,12 @@ def merge_pixel(image_1_tuple, image_2_tuple, pattern_tuple):
     pattern = float(pattern_tuple[0]) / 255
     return tuple([int(pattern * image_1_tuple[i] + (1 - pattern) * image_2_tuple[i]) for i in range(3)])
 
+
 def check(start, length, index):
     if index >= (length + start):
         return check(start + length, length * 2, index)
     else:
-        if index >= ((length/2 + start)):
+        if index >= ((length / 2 + start)):
             return True
         else:
             return False
@@ -66,6 +67,5 @@ def check(start, length, index):
 # merge_images(pattern_name="chessboard_45")
 
 # paste_pattern(image_string="palac.jpg", pattern_name="blurred_rings")
-#merge_images()
-PatternGenerator(500,500).generate_pattern_image("concentric").show()
-
+# merge_images()
+PatternGenerator(500, 500).generate_pattern_image("concentric").show()
