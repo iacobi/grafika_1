@@ -44,15 +44,6 @@ def merge_pixel(image_1_tuple, image_2_tuple, pattern_tuple):
     return tuple([int(pattern * image_1_tuple[i] + (1 - pattern) * image_2_tuple[i]) for i in range(3)])
 
 
-def check(start, length, index):
-    if index >= (length + start):
-        return check(start + length, length * 2, index)
-    else:
-        if index >= ((length / 2 + start)):
-            return True
-        else:
-            return False
-
 # p_generator = PatternGenerator(500, 500)
 #
 # p_generator.generate_pattern_image('shards').show()

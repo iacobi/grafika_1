@@ -45,7 +45,7 @@ class PatternGenerator:
 
     def set_colors(self, primary=BLACK, secondary=WHITE):
         self.primary_color = primary
-        self.secondary = secondary
+        self.secondary_color = secondary
 
     def set_ring_blur(self, width, blur):
         self.ring_width = width
@@ -118,8 +118,8 @@ class PatternGenerator:
 
     def chessboard(self, x, y):
         "arg_x: field width, arg_y: field_height"
-        x_d = int((x + self.width) / self.arg_x)
-        y_d = int((y + self.height) / self.arg_y)
+        x_d = int((x + 2*self.width) / self.arg_x)
+        y_d = int((y + 2*self.height) / self.arg_y)
         if x_d % 2 == y_d % 2:
             return self.primary_color
         else:
