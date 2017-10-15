@@ -38,6 +38,10 @@ class PatternGenerator:
                                    'ring_grid': self.ring_grid,
                                    'concentric': self.concentric}
 
+    def set_center(self, x, y):
+        self.pattern_x_center = x
+        self.pattern_y_center = y
+
     def set_x_y_step(self, x, y, step):
         self.arg_x = x
         self.arg_y = y
@@ -49,7 +53,7 @@ class PatternGenerator:
 
     def set_ring_blur(self, width, blur):
         self.ring_width = width
-        self.ring_blur = blur
+        self.ring_blur = max(1, blur)
         self.total_ring_width = self.ring_width + self.ring_blur
         self.blur_step = int(255 / self.ring_blur)
 
@@ -118,8 +122,8 @@ class PatternGenerator:
 
     def chessboard(self, x, y):
         "arg_x: field width, arg_y: field_height"
-        x_d = int((x + 2*self.width) / self.arg_x)
-        y_d = int((y + 2*self.height) / self.arg_y)
+        x_d = int((x + 2 * self.width) / self.arg_x)
+        y_d = int((y + 2 * self.height) / self.arg_y)
         if x_d % 2 == y_d % 2:
             return self.primary_color
         else:

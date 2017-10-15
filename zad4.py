@@ -6,9 +6,9 @@ pattern_dictionary = ['dots', 'shards', 'blurred_rings', 'grid',
                       'chessboard', 'chessboard_45', 'ring_grid', 'concentric']
 
 
-def merge_images(image_1_path, image_2_path, pattern_name="blurred_rings"):
-    image_1 = Image.open("palac.jpg")
-    image_2 = Image.open("palac2.jpg")
+def merge_images(image_1_path, image_2_path, pattern_name):
+    image_1 = Image.open(image_1_path)
+    image_2 = Image.open(image_2_path)
     width, height = image_1.size
     generator = PatternGenerator(width, height)
     # INTERFACE BLOCK
@@ -30,4 +30,4 @@ def merge_pixel(image_1_tuple, image_2_tuple, pattern_tuple):
 
 
 for pattern in pattern_dictionary:
-    merge_images("palac1.jpg", "palac2.jpg", pattern)
+    merge_images("palac.jpg", "palac2.jpg", pattern)

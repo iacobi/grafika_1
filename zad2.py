@@ -14,7 +14,7 @@ def paste_pattern(image_string, pattern_name):
     for x in range(width):
         for y in range(height):
             final_image_pix[x, y] = merge_pixel(im_1[x, y], pattern_image[x, y])
-    final_image.save(pattern_name+".jpg")
+    final_image.save(pattern_name + ".jpg")
     final_image.show()
 
 
